@@ -1,0 +1,68 @@
+controller_manager:
+  ros__parameters: # ROS2 控制器管理器参数
+    update_rate: 100  # Hz
+    use_sim_time: true  
+
+    fishbot_joint_state_broadcaster:
+      #这个控制器会扫描所有状态接口，通过话题把接口里的positon状态发布
+      type: joint_state_broadcaster/JointStateBroadcaster
+      #使用ros2 control load_controller fishbot_joint_state_broadcaster --set-state active
+      #来加载并激活控制器
+    fishbot_effort_controller:
+      #这个控制器会扫描所有的effort命令接口，通过话题把命令发送到接口
+      type: effort_controllers/JointGroupEffortController
+      #使用ros2 control load_controller fishbot_effort_controller --set-state active
+      #来加载并激活控制器
+    fishbot_diff_drive_controller:
+      #这个控制器会扫描所有的速度命令接口，通过话题把命令发送到接口
+      type: diff_drive_controller/DiffDriveController
+      #使用ros2 control load_controller fishbot_diff_drive_controller --set-state active
+      #来加载并激活控制器
+
+fishbot_effort_controller:
+  ros__parameters:
+    # joint代表控制的关节列表
+    joints:
+      - left_wheel_joint
+      - right_wheel_joint
+    # command代表控制的命令接口列表
+    command_interfaces:
+      # 力矩控制接口
+      - effort
+    # state代表控制的状态接口列表
+    state_interfaces:
+      # 位置控制接口
+      - position
+      # 速度控制接口
+      - velocity
+      # 力矩控制接口
+      - effort
+
+fishbot_diff_drive_controller:
+  ros__parameters:
+    # 左右轮子名称
+    left_wheel_names: ["left_wheel_joint"]
+    right_wheel_names: ["right_wheel_joint"]
+    # 速度命令接口
+    wheel_separation: 0.20
+    # 实际上是2个轮子, 但它们都由1个信号控制
+    wheel_radius: 0.032
+    # 轮子之间的距离
+    wheel_separation_multiplier: 1.0
+    left_wheel_radius_multiplier: 1.0
+    right_wheel_radius_multiplier: 1.0
+    # 速度命令接口
+    publish_rate: 50.0
+    odom_frame_id: odom
+    base_frame_id: base_footprint
+    # 里程计协方差
+    pose_covariance_diagonal : [0.001, 0.001, 0.0, 0.0, 0.0, 0.01]
+    # 速度协方差
+    twist_covariance_diagonal: [0.001, 0.0, 0.0, 0.0, 0.0, 0.01]
+    # open_loop为true表示使用开环控制，enable_odom_tf为true表示发布里程计TF
+    open_loop: true
+    enable_odom_tf: true
+    # cmd_vel_timeout表示命令超时时间，单位为秒，超过该时间未收到新命令则停止机器人
+    cmd_vel_timeout: 0.5
+    # use_stamped_vel为true表示使用带时间戳的速度命令
+    use_stamped_vel: false

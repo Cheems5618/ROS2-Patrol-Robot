@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- 添加惯性属性 -->
+  <xacro:include filename="$(find fishbot_description)/urdf/fishbot/common_inertia.xacro"/>
+  <xacro:macro name="laser_xacro" params="xyz">
+    <!--雷达支撑杆-->
+    <link name="laser_cylinder_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <cylinder length="0.10" radius="0.01"/>
+        </geometry>
+        <material name="black">
+          <!-- 黑色材质，完全不透明 -->
+          <color rgba="0 0 0 1"/>
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <cylinder length="0.10" radius="0.01"/>
+        </geometry>
+      </collision>
+      <!-- 雷达支撑杆的惯性部分 -->
+      <xacro:cylinder_inertia m="0.05" r="0.01" h="0.10"/>
+    </link>
+
+    <!--雷达-->
+    <link name="laser_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <cylinder length="0.02" radius="0.02"/>
+        </geometry>
+        <material name="black">
+          <!-- 黑色材质，完全不透明 -->
+          <color rgba="0 0 0 1"/>
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <cylinder length="0.02" radius="0.02"/>
+        </geometry>
+      </collision>
+      <!-- 雷达的惯性部分 -->
+      <xacro:cylinder_inertia m="0.1" r="0.02" h="0.02"/>
+    </link>
+
+    <!--雷达与雷达支撑杆之间的固定关节-->
+    <joint name="laser_joint" type="fixed">
+      <parent link="laser_cylinder_link"/>
+      <child link="laser_link"/>
+      <origin xyz="0 0 0.05" rpy="0 0 0"/>
+    </joint>    
+    <!--base与雷达支撑杆之间的固定关节-->
+    <joint name="laser_cylinder_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="laser_cylinder_link"/>
+      <origin xyz="${xyz}" rpy="0 0 0"/>
+    </joint>    
+
+
+    <!-- gazebo设置 -->
+    <gazebo reference="laser_link">
+      <material>Gazebo/Red</material>
+    </gazebo>
+    <gazebo reference="laser_cylinder_link">
+      <material>Gazebo/Black</material>
+    </gazebo>
+  </xacro:macro>
+</robot>

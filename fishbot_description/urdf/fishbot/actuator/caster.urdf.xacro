@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- 添加惯性属性 -->
+  <xacro:include filename="$(find fishbot_description)/urdf/fishbot/common_inertia.xacro"/>
+  <xacro:macro name="caster_xacro" params="caster_name xyz">
+    <!-- caster模块的xacro宏 -->
+    <link name="${caster_name}_link">
+      <!-- caster的可视部分 -->
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <sphere radius="0.016"/>
+        </geometry>
+        <material name="yellow">
+          <!-- 黄色材质，完全不透明 -->
+          <color rgba="1 1 0 1"/>
+        </material>
+      </visual>
+      <!-- caster的碰撞部分 -->
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <sphere radius="0.016"/>
+        </geometry>
+      </collision>
+      <!-- caster的惯性部分 -->
+      <xacro:sphere_inertia m="0.05" r="0.016"/>
+    </link>
+    <!-- caster与base_link之间的固定关节-->
+    <joint name="${caster_name}_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="${caster_name}_link"/>
+      <origin xyz="${xyz}" rpy="0 0 0"/>
+    </joint>    
+
+    <!-- gazebo设置 -->
+    <gazebo reference="${caster_name}_link">
+      <!-- mu1的意思是切向摩擦系数 -->
+      <mu1 value="0.0"/>
+      <!-- mu2的意思是法向摩擦系数 -->
+      <mu2 value="0.0"/>
+      <!-- kp的意思是位置控制的刚度系数 -->
+      <kp value="1000000000.0"/>
+      <!-- kd的意思是位置控制的阻尼系数 -->
+      <kd value="1.0"/>
+      <!-- 设置颜色为紫色 -->
+      <material>Gazebo/Purple</material>
+    </gazebo>
+  </xacro:macro>
+</robot>

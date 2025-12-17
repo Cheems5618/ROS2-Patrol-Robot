@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- 添加惯性属性 -->
+    <xacro:include filename="$(find fishbot_description)/urdf/fishbot/common_inertia.xacro"/> 
+    <xacro:macro name="wheel_xacro" params="wheel_name xyz">
+        <!-- wheel的link部分，名称为wheel_link -->
+        <link name="${wheel_name}_link">
+            <!--wheel的可视部分 -->
+            <visual>
+                <origin xyz="0 0 0" rpy="1.57079 0 0"/>
+                <geometry>
+                    <cylinder radius="0.032" length="0.04"/>
+                </geometry>
+                <material name="yellow">
+                    <!-- 黄色材质，完全不透明 -->
+                    <color rgba="1 1 0 1"/>
+                </material>
+            </visual>
+            <!-- wheel的碰撞部分 -->
+            <collision>
+                <origin xyz="0 0 0" rpy="1.57079 0 0"/>
+                <geometry>
+                    <cylinder radius="0.032" length="0.04"/>
+                </geometry>
+            </collision>
+            <!-- wheel的惯性部分 -->
+            <xacro:cylinder_inertia m="0.05" r="0.032" h="0.04"/>
+        </link>
+        <!-- wheel与base_link之间的固定关节-->
+        <joint name="${wheel_name}_joint" type="continuous">
+            <parent link="base_link"/>
+            <child link="${wheel_name}_link"/>
+            <origin xyz="${xyz}" rpy="0 0 0"/>
+            <axis xyz="0 1 0"/>
+        </joint>    
+
+        <!-- gazebo设置 -->
+        <gazebo reference="${wheel_name}_link">
+            <!-- mu1的意思是切向摩擦系数 -->
+            <mu1 value="20.0"/>
+            <!-- mu2的意思是法向摩擦系数 -->
+            <mu2 value="20.0"/>
+            <!-- kp的意思是位置控制的刚度系数 -->
+            <kp value="1000000000.0"/>
+            <!-- kd的意思是位置控制的阻尼系数 -->
+            <kd value="1.0"/>
+            <material>Gazebo/Yellow</material>
+        </gazebo>
+    </xacro:macro>
+</robot>

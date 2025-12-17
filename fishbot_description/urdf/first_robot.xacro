@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="first_robot">
+   <xacro:macro name="base_link" params="length radius">
+    <link name="base_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <cylinder length="${length}" radius="${radius}"/>
+        </geometry>
+        <material name="white">
+          <color rgba="1.0 1.0 1.0 0.5"/>
+        </material>
+      </visual>
+    </link>
+  </xacro:macro>
+
+    <xacro:macro name="imu_link" params="imu_name imu_link_origin">
+        <link name="${imu_name}">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+            <box size="0.02 0.02 0.02"/>
+            </geometry>
+            <material name="green">
+            <color rgba="0 1 0 1"/>
+            </material>
+        </visual>
+        </link>
+        <joint name="${imu_name}_joint" type="fixed">
+            <parent link="base_link"/>
+            <child link="${imu_name}"/>
+            <origin xyz="${imu_link_origin}" rpy="0 0 0"/>
+        </joint>    
+    </xacro:macro>
+    <!-- 使用宏定义创建机器人链接和关节 -->
+    <xacro:base_link length="0.10" radius="0.12"/>
+    <xacro:imu_link imu_name="imu_down" imu_link_origin="0 0 -0.03"/>
+    <xacro:imu_link imu_name="imu_up" imu_link_origin="0 0 0.06"/>
+</robot>

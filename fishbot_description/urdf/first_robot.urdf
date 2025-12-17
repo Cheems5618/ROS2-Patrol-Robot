@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<robot name="first_robot">
+  <!-- 定义机器人的基本链接 -->
+  <link name="base_link">
+    <visual>
+      <!--origin的意思是物体的位姿（位置和姿态）-->
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <!--geometry定义了物体的形状-->
+      <geometry>
+        <!-- 定义一个圆柱体作为机器人的主体 -->
+        <cylinder length="0.10" radius="0.12"/>
+      </geometry>
+      <material name="white">
+        <!-- 这里可以定义材质的纹理、颜色等属性 -->
+        <color rgba="1.0 1.0 1.0 0.5"/>
+        <!-- 颜色定义为白色，透明度为0.5 -->
+      </material>
+    </visual>
+  </link>
+
+  <!--机器人的IMU部件，包含陀螺仪和加速度计-->
+  <link name="imu_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.02 0.02 0.02"/>
+      </geometry>
+      <material name="green">
+        <color rgba="0 1 0 1"/>
+      </material>
+    </visual>
+  </link>
+
+  <!-- 定义关节，将IMU连接到机器人主体 -->
+  <joint name="base_to_imu" type="fixed">
+  <!--joint的意思是连接两个链接的关系,type包含fixed、revolute、prismatic等类型，分别为固定、旋转和平移-->
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <origin xyz="0 0 0.03" rpy="0 0 0"/>
+    <!--xyz表示关节的位姿（位置和姿态）,rpy表示关节的旋转（滚转、俯仰、偏航）-->
+  </joint>
+
+
+</robot>

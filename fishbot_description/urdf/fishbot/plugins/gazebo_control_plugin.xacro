@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:macro name="gazebo_control_plugin">
+        <gazebo>
+            <!-- plugin表示差速驱动插件，name表示插件名称，filename表示插件文件名 -->
+            <!-- libgazebo_ros_diff_drive.so是Gazebo提供的差速驱动插件，是一个动态链接库 -->
+            <plugin name='diff_drive' filename='libgazebo_ros_diff_drive.so'>
+                <!-- ros表示与ROS的接口 -->
+                <ros>
+                    <!-- namespace表示ROS的命名空间，用于节点的组织 -->
+                    <namespace>/</namespace>
+                    <!-- remapping表示ROS主题的重映射，用于把cmd_vel和odom主题映射到插件内部 -->
+                    <remapping>cmd_vel:=cmd_vel</remapping>
+                    <remapping>odom:=odom</remapping>
+                </ros>
+                <!-- update_rate是插件更新的频率 -->
+                <update_rate>30</update_rate>
+                <!-- joint是轮子与底盘之间的关节 -->
+                <left_joint>left_wheel_joint</left_joint>
+                <right_joint>right_wheel_joint</right_joint>
+                <!-- kinematics，用于差速驱动 -->
+                <!-- separation是轮子之间的距离 -->
+                <wheel_separation>0.2</wheel_separation>
+                <!-- wheel_diameter是轮子的直径 -->
+                <wheel_diameter>0.064</wheel_diameter>
+                <!-- limits -->
+                <!-- max_wheel_torque是轮子的最大扭矩 -->
+                <max_wheel_torque>20</max_wheel_torque>
+                <!-- max_wheel_velocity是轮子的最大速度 -->
+                <!-- <max_wheel_velocity>1.0</max_wheel_velocity> -->
+                <!-- max_wheel_acceleration是轮子的最大加速度 -->
+                <max_wheel_acceleration>1.0</max_wheel_acceleration>
+                <!-- output -->
+                <publish_odom>true</publish_odom>
+                <publish_odom_tf>true</publish_odom_tf>
+                <publish_wheel_tf>true</publish_wheel_tf>
+
+                <!-- odometry_frame是里程计的坐标系 -->
+                <odometry_frame>odom</odometry_frame>
+                <!-- robot_base_frame是机器人底盘的坐标系 -->
+                <robot_base_frame>base_footprint</robot_base_frame>
+            </plugin>
+        </gazebo>
+   </xacro:macro>
+</robot>
